@@ -4,8 +4,8 @@ interface UnitSpecificCurrentWeatherEntry {
 
     val temperature: Double
     val weatherCode: Int
-    //val weatherIcons: MutableList<String>
-    //val weatherDescriptions: MutableList<String>
+    val weatherIcons: List<String>
+    val weatherDescriptions: List<String>
     val windSpeed: Double
     val windDirection: String
     val precipitationVolume: Double

@@ -43,6 +43,7 @@ dependencies {
     def lifecycle_version = "2.1.0"
     def glide_version = "4.11.0"
     def groupie_version = "2.7.0"
+    def preference_version = "1.1.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -102,6 +103,9 @@ dependencies {
 
     //New material design
     implementation 'com.google.android.material:material:1.0.0'
+
+    //Preference
+    implementation "androidx.preference:preference-ktx:$preference_version"
 
 
 }

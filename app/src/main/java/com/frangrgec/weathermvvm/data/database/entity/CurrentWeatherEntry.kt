@@ -22,12 +22,10 @@ data class CurrentWeatherEntry(
     val temperature: Double,
     @Json(name = "weather_code")
     val weatherCode: Int,
-    /*@Json(name = "weather_icons")
-    @TypeConverters(StringConverters::class)
-    val weatherIcons: MutableList<String>?,
+    @Json(name = "weather_icons")
+    val weatherIcons: List<String>,
     @Json(name = "weather_descriptions")
-    @TypeConverters(StringConverters::class)
-    val weatherDescriptions: MutableList<String>?,*/
+    val weatherDescriptions: List<String>,
     @Json(name = "wind_speed")
     val windSpeed: Double,
     @Json(name = "wind_dir")

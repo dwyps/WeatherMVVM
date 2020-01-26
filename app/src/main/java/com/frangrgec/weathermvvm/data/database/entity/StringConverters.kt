@@ -20,6 +20,17 @@ class StringConverters {
     }*/
 
     @TypeConverter
+    fun fromString(stringListString: String): List<String> {
+        return stringListString.split(",").map { it }
+    }
+
+    @TypeConverter
+    fun toString(stringList: List<String>): String {
+        return stringList.joinToString(separator = ",")
+    }
+
+
+    /*@TypeConverter
     fun toList(value: String?): MutableList<String> {
 
         return listOf(value!!).toMutableList()
@@ -38,7 +49,7 @@ class StringConverters {
             string += "$it,"
         }
         return string
-    }
+    }*/
 
 
 }
