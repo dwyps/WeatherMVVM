@@ -1,15 +1,19 @@
 package com.frangrgec.weathermvvm
 
 import android.app.Application
+import android.content.Context
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import com.frangrgec.weathermvvm.data.database.ForecastDatabase
 import com.frangrgec.weathermvvm.data.network.*
+import com.frangrgec.weathermvvm.data.provider.LocationProvider
+import com.frangrgec.weathermvvm.data.provider.LocationProviderImpl
 import com.frangrgec.weathermvvm.data.provider.UnitProvider
 import com.frangrgec.weathermvvm.data.provider.UnitProviderImpl
 import com.frangrgec.weathermvvm.data.repository.ForecastRepository
 import com.frangrgec.weathermvvm.data.repository.ForecastRepositoryImpl
 import com.frangrgec.weathermvvm.ui.current.CurrentWeatherViewModelFactory
+import com.google.android.gms.location.LocationServices
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -25,10 +29,20 @@ class ForecastApplication : Application(), KodeinAware {
 
         bind() from singleton { ForecastDatabase(instance()) }
         bind() from singleton { instance<ForecastDatabase>().currentWeatherDao() }
+        bind() from singleton { instance<ForecastDatabase>().weatherLocationDao() }
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
         bind() from singleton { WeatherApiInterface(instance()) }
         bind<WeatherNetworkDataSource>() with singleton { WeatherNetworkDataSourceImpl(instance()) }
-        bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(), instance()) }
+        bind() from provider { LocationServices.getFusedLocationProviderClient(instance<Context>()) }
+        bind<LocationProvider>() with singleton { LocationProviderImpl(instance(), instance()) }
+        bind<ForecastRepository>() with singleton {
+            ForecastRepositoryImpl(
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        }
         bind<UnitProvider>() with singleton { UnitProviderImpl(instance()) }
         bind() from provider { CurrentWeatherViewModelFactory(instance(), instance()) }
 
