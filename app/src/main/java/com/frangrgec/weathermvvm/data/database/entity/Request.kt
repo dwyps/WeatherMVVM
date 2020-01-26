@@ -1,4 +1,4 @@
-package com.frangrgec.weathermvvm.data.network.response
+package com.frangrgec.weathermvvm.data.database.entity
 
 
 import com.squareup.moshi.Json

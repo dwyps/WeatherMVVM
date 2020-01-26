@@ -7,22 +7,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 
 import com.frangrgec.weathermvvm.R
-import com.frangrgec.weathermvvm.data.WeatherApiInterface
-import com.squareup.moshi.Moshi
+import com.frangrgec.weathermvvm.data.network.ConnectivityInterceptorImpl
+import com.frangrgec.weathermvvm.data.network.WeatherApiInterface
+import com.frangrgec.weathermvvm.data.network.WeatherNetworkDataSource
+import com.frangrgec.weathermvvm.data.network.WeatherNetworkDataSourceImpl
 import kotlinx.android.synthetic.main.current_weather_fragment.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Response
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 
 class CurrentWeatherFragment : Fragment() {
 
@@ -43,16 +39,19 @@ class CurrentWeatherFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(CrrentWeatherViewModel::class.java)
 
-        val weatherApiInterface = WeatherApiInterface.getRetrofit()
 
+        //TODO experimental part goes to repository
+        val weatherApiInterface = WeatherApiInterface(ConnectivityInterceptorImpl(this.context!!))
+        val weatherNetworkDataSource = WeatherNetworkDataSourceImpl(weatherApiInterface)
+
+        weatherNetworkDataSource.downloadedCurrentWeather.observe(this, Observer { response ->
+            Log.i("radi",response.toString())
+            textView.text = response.toString()
+        })
 
         viewModel.viewModelScope.launch {
-            val response = weatherApiInterface.getCurrentWeather(location = "London",unit = "m").currentWeatherEntry.temperature
-            Log.i("radi",response.toString())
-            withContext(Main) {
-                textView.text=response.toString()
-            }
-            }
+            weatherNetworkDataSource.fetchCurrentWeather("London")
+        }
     }
 
 }
